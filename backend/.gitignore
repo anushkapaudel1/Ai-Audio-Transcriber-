@@ -1,0 +1,12 @@
+# 🔐 Never commit secrets
+.env
+
+# 📦 Ignore dependencies
+node_modules/
+
+# 💾 Local file uploads (transient files)
+uploads/
+*.mp3
+*.mp3:Zone.Identifier
+
+
