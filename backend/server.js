@@ -6,6 +6,8 @@ const axios = require("axios");
 const dotenv = require("dotenv");
 
 dotenv.config();
+console.log("🔑 AssemblyAI Key Loaded:", process.env.ASSEMBLYAI_API_KEY);
+
 
 const app = express();
 app.use(cors());
