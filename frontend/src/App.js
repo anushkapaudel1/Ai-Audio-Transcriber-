@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
@@ -11,7 +10,8 @@ import Lottie from "lottie-react";
 import audioAnimation from "./animations/audio.json";
 import * as THREE from "three";
 import WAVES from "vanta/dist/vanta.waves.min";
-import logo from './assets/logo.png'; // adjust path if needed
+import logo from './assets/logo.png';
+import supabase from "./supabase";
 
 // Set THREE globally BEFORE initializing Vanta
 window.THREE = THREE;
@@ -19,7 +19,7 @@ window.THREE = THREE;
 function Home({ file, handleFileChange, handleTranscribe, loading, transcript }) {
   const { t } = useTranslation();
   const vantaRef = useRef(null);
-  const vantaEffectRef = useRef(null); // ✅ Use ref instead of state
+  const vantaEffectRef = useRef(null);
 
   useEffect(() => {
     if (!vantaEffectRef.current && vantaRef.current) {
@@ -28,17 +28,15 @@ function Home({ file, handleFileChange, handleTranscribe, loading, transcript })
         THREE: window.THREE,
         mouseControls: true,
         touchControls: true,
-        mouse: true,
         minHeight: 200.0,
         minWidth: 200.0,
         scale: 1.0,
         scaleMobile: 1.0,
-        color: 0x80d8ff,          // Soft blue waves
-backgroundColor: 0xe0f7fa,// Powder blue background
- // 💥 Deep black for contrast
-        shininess: 100,           // Brighter
-        waveHeight: 25,           // 💥 BIG waves to test
-        waveSpeed: 1.2,  
+        color: 0x80d8ff,
+        backgroundColor: 0xe0f7fa,
+        shininess: 100,
+        waveHeight: 25,
+        waveSpeed: 1.2,
         zoom: 1.2,
       });
       console.log("✅ Vanta initialized");
@@ -51,7 +49,17 @@ backgroundColor: 0xe0f7fa,// Powder blue background
         console.log("🧹 Vanta destroyed");
       }
     };
-  }, []); // ✅ Runs only once
+  }, []);
+
+  const downloadTranscript = () => {
+    const element = document.createElement("a");
+    const fileBlob = new Blob([transcript], { type: "text/plain" });
+    element.href = URL.createObjectURL(fileBlob);
+    element.download = "transcript.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   return (
     <main className="hero" ref={vantaRef}>
@@ -68,7 +76,14 @@ backgroundColor: 0xe0f7fa,// Powder blue background
           <button className="transcribe-button" onClick={handleTranscribe}>
             {loading ? t("transcribing") : t("transcribe")}
           </button>
-          {transcript && <p style={{ marginTop: "20px" }}>{transcript}</p>}
+          {transcript && (
+            <div style={{ marginTop: "20px" }}>
+              <p>{transcript}</p>
+              <button className="download-button" onClick={downloadTranscript}>
+                📥 {t("download") || "Download Transcript"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </main>
@@ -81,33 +96,51 @@ function App() {
   const [transcript, setTranscript] = useState("");
   const { t, i18n } = useTranslation();
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // ✅ Login status check
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session?.user);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsLoggedIn(false);
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) setFile(selectedFile);
   };
 
-  
   const handleTranscribe = async () => {
     if (!file) {
       alert(t("upload"));
       return;
     }
-  
+
     setLoading(true);
     setTranscript("");
-  
+
     const formData = new FormData();
     formData.append("audio", file);
-  
+
     try {
       const res = await fetch("http://localhost:5000/upload", {
         method: "POST",
         body: formData,
       });
-  
+
       const text = await res.text();
-  
+
       try {
         const data = JSON.parse(text);
         if (res.ok && data.transcription) {
@@ -126,7 +159,6 @@ function App() {
       setLoading(false);
     }
   };
-  
 
   const toggleLangMenu = () => setShowLangMenu((prev) => !prev);
 
@@ -136,18 +168,26 @@ function App() {
         {/* Navigation */}
         <header className="navbar">
           <div className="navbar__container">
-          <Link to="/" className="navbar__logo">
+            <Link to="/" className="navbar__logo">
               <img src={logo} alt="Logo" className="navbar__logo-img" />
-           </Link>
+            </Link>
 
             <nav className="navbar__menu">
               <Link to="/" className="navbar__links">{t("nav.home")}</Link>
               <Link to="/about" className="navbar__links">{t("nav.about")}</Link>
               <Link to="/instructions" className="navbar__links">{t("nav.instructions")}</Link>
               <Link to="/faq" className="navbar__links">{t("nav.faq")}</Link>
-              <Link to="/signin">
-                <button className="navbar__cta-btn">{t("nav.signin")}</button>
-              </Link>
+
+              {!isLoggedIn ? (
+                <Link to="/signin">
+                  <button className="navbar__cta-btn">{t("nav.signin")}</button>
+                </Link>
+              ) : (
+                <button className="navbar__cta-btn" onClick={handleLogout}>
+                  {t("Signout") || "Sign Out"}
+                </button>
+              )}
+
               <div className="lang-switcher">
                 <span onClick={toggleLangMenu} className="lang-icon" title="Change language">🌐</span>
                 {showLangMenu && (

@@ -58,7 +58,7 @@ const resources = {
       },
       "signin": {
         "title": "Sign In",
-        "desc": "This is a placeholder sign-in page. You can implement login logic here later.",
+        
         "button": "Sign in with Google"
       }
     }
@@ -119,7 +119,7 @@ const resources = {
     },
     "signin": {
       "title": "Kirjaudu sisään",
-      "desc": "Tämä on esimerkkisivu kirjautumista varten. Voit myöhemmin lisätä kirjautumislogiikan.",
+    
       "button": "Kirjaudu Googlella"
     }
   }
@@ -245,7 +245,7 @@ const resources = {
     },
     "signin": {
       "title": "Iniciar sesión",
-      "desc": "Esta es una página de ejemplo de inicio de sesión. Puedes implementar la lógica de acceso más adelante.",
+      
       "button": "Iniciar sesión con Google"
     }
   }

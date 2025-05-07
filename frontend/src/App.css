@@ -265,3 +265,18 @@ canvas {
   z-index: 0;
   pointer-events: auto !important; 
 }
+.download-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-weight: bold;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.download-button:hover {
+  background-color: #005fa3;
+}

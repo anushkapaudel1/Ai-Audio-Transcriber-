@@ -1,0 +1,121 @@
+.signin-container {
+    padding: 120px 20px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: #263238;
+    animation: fadeSlideIn 1s ease-out forwards;
+  }
+  
+  .signin-animation {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .signin-title {
+    font-size: 2.5rem;
+    color: #0288d1;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease forwards;
+    font-weight: 600;
+  }
+  
+  .signin-box {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    margin: auto;
+    max-width: 400px;
+    animation: floatFade 1.2s ease-out forwards;
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  
+  .signin-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .signin-box-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+  }
+  
+  /* Blue buttons */
+  .signin-btn, .signup-btn {
+    background-color: #0288d1;
+    color: #fff;
+  }
+  
+  .signin-btn:hover, .signup-btn:hover {
+    background-color: #0277bd;
+  }
+  
+  /* Google Button */
+  .google-btn {
+    background-color: #db4437;
+    color: #fff;
+  }
+  
+  .google-btn:hover {
+    background-color: #c33d30;
+  }
+  
+  /* GitHub Button */
+  .github-btn {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .github-btn:hover {
+    background-color: #1f1f1f;
+  }
+  
+  .signin-message {
+    margin-top: 10px;
+    color: gray;
+  }
+  
+  .oauth-section {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeSlideIn {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes floatFade {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  
