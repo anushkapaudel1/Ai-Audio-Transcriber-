@@ -134,7 +134,9 @@ function App() {
     formData.append("audio", file);
 
     try {
-      const res = await fetch("http://localhost:5001/upload", {
+      const res = await fetch(
+`${process.env.REACT_APP_API_URL}/upload`,
+     {
         method: "POST",
         body: formData,
       });
